@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.button-container {
+  margin: 30%;
+
+}
+
+button {
+  background-color: red;
+  width: 500px;
+  height: 100px;
+}
