@@ -5,7 +5,7 @@ import LoginComponent from './Components/login';
 function App() {
   return (
     <LoginComponent/>
-  );
+ );
 }
 
 export default App;

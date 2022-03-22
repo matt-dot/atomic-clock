@@ -1,10 +1,13 @@
 import '../Styles/App.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import TimeComponent from './time'
+import NavComponent from './nav';
 
 
-function LoginComponent() {
+function LoginComponent(props) {
     const [ip, setIP] = useState('');
+    const [login, setLogin] = useState(false);
 
 const getData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/')
@@ -16,18 +19,33 @@ useEffect(() => {
     getData();
 }, [])
 
-const toTime = () => {
-
-
+const onClick = () => {
+    setLogin(true);
 }
-    // TODO: Redirect to main page on press
 
+
+if(login) {
+    return (
+            <div >
+                <NavComponent />
+                <div className='button-container'>
+                <TimeComponent ip={ip}  />
+                </div>
+
+            </div>
+        );
+
+
+} else if (!login) {
+    // Send IP address off to check for last session login
     return (
         <div className='button-container'>
-            <button onClick={toTime}>Login</button>
+            <button onClick={onClick}>Login</button>
             <h2>Your IP is = {ip}</h2>
         </div>
     );
+}
+
 }
 
 
