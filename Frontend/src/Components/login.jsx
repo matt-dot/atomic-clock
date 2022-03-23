@@ -19,24 +19,24 @@ const getData = async () => {
 
 useEffect(() => {
     getData();
-    localStorage.setItem('time', date.toLocaleDateString() + " " +  date.toLocaleTimeString())
+    localStorage.setItem('bTime', localStorage.getItem('aTime'))
 }, [])
 
 const onClick = () => {
     setLogin(true);
 }
 
-
 if(login) {
+
     return (
             <div >
                 <NavComponent />
                 <div className='button-container'>
-                <TimeComponent ip={ip}  />
+                <TimeComponent ip={ip} />
                 </div>
 
             </div>
-        );
+    );
 
 
 } else if (!login) {
