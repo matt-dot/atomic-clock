@@ -8,6 +8,8 @@ import NavComponent from './nav';
 function LoginComponent(props) {
     const [ip, setIP] = useState('');
     const [login, setLogin] = useState(false);
+    // Temp until hooked up to backend to get the time
+    let date = new Date()
 
 const getData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/')
@@ -17,6 +19,7 @@ const getData = async () => {
 
 useEffect(() => {
     getData();
+    localStorage.setItem('time', date.toLocaleTimeString())
 }, [])
 
 const onClick = () => {
