@@ -1,5 +1,5 @@
 import '../Styles/App.css';
-import React, { useEffect, useLayoutEffect } from 'react';
+import React from 'react';
 
 const TimeComponent = (props) => {
     const date = new Date();
@@ -9,7 +9,7 @@ const TimeComponent = (props) => {
 
     if(bTime) {
     return (
-            <div>
+            <div className='time'>
                 <h1>Current time= {currentTime} </h1>
                 <h1>Last login= {bTime} </h1>
                 <h1>Your IP= {props.ip}</h1>
@@ -19,7 +19,7 @@ const TimeComponent = (props) => {
     }
     else if (!bTime){
         return (
-            <div>
+            <div className='time'>
                 <h1>Current time= {currentTime} </h1>
                 <h1>No last login </h1>
                 <h1>Your IP= {props.ip}</h1>

@@ -5,7 +5,7 @@ import TimeComponent from './time'
 import NavComponent from './nav';
 
 
-function LoginComponent(props) {
+function LoginComponent() {
     const [ip, setIP] = useState('');
     const [login, setLogin] = useState(false);
     // Temp until hooked up to backend to get the time
@@ -30,17 +30,12 @@ if(login) {
 
     return (
             <div >
-                <NavComponent />
-                <div className='button-container'>
+                <NavComponent login={login} setLogin={setLogin} />
                 <TimeComponent ip={ip} />
-                </div>
-
             </div>
     );
 
-
 } else if (!login) {
-    // Send IP address off to check for last session login
     return (
         <div className='button-container'>
             <button onClick={onClick}>Login</button>
@@ -48,7 +43,6 @@ if(login) {
         </div>
     );
 }
-
 }
 
 
