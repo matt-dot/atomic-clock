@@ -19,7 +19,7 @@ const getData = async () => {
 
 useEffect(() => {
     getData();
-    localStorage.setItem('time', date.toLocaleTimeString())
+    localStorage.setItem('time', date.toLocaleDateString() + " " +  date.toLocaleTimeString())
 }, [])
 
 const onClick = () => {

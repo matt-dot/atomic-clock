@@ -13,13 +13,16 @@ const NavComponent = () => {
             <nav>
               <ul>
                 <li>
-                    Home
+                    Product listing
                 </li>
                 <li>
-                    Account
+                   Account details
                 </li>
                 <li>
                     Orders
+                </li>
+                <li>
+                    Online purchase system
                 </li>
               </ul>
             </nav>
