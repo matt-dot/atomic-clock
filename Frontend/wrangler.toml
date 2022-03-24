@@ -1,0 +1,10 @@
+account_id = "d3204b382460e275f22f622e74bddc2a"
+name = "frontend"
+type = "webpack"
+route = ''
+zone_id = ''
+usage_model = ''
+compatibility_flags = []
+workers_dev = true
+site = {bucket = "./build",entry-point = "workers-site"}
+compatibility_date = "2022-03-22"
