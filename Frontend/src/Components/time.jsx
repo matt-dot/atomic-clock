@@ -18,6 +18,11 @@ const TimeComponent = (props) => {
          console.log('connection made');
      });
 
+     socket.on("message", (msg) => {
+        console.log(msg);
+        console.log('connection made');
+    });
+
     if(bTime) {
     return (
             <div className='time'>
