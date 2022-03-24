@@ -1,6 +1,6 @@
 import ntplib
 from time import ctime
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def get_time():
     client = ntplib.NTPClient()

@@ -1,6 +1,8 @@
-from audioop import cross
 import os
 import hashlib
+import time
+from datetime import timedelta
+import json
 
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, send
@@ -13,16 +15,14 @@ app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
-@app.route('/home')
 @cross_origin(origin="*")
 def index():
     """
+    Returns: home page
     """
     return render_template('index.html')
 
 
-# @sock.route('/logged-in', methods=["GET"])
-# @app.route('/logged-in', methods=["GET"])
 @socketio.on("message")
 def display_time(msg):
     """
@@ -31,44 +31,57 @@ def display_time(msg):
         current_time: the current time
         last_log_in: time of previous log in
     """
-    print(msg)
-    send(str(clock.get_time()))
+    # get IP and hash
+    ip_addr = request.environ.get("HTTP_X_REAL_IP", request.remote_addr)
+    hash_IP = hashlib.sha256((ip_addr.encode('utf-8'))).hexdigest()
 
-    # ip_addr = request.environ.get("HTTP_X_REAL_IP", request.remote_addr)
-    # hash_IP = hashlib.sha256((ip_addr.encode('utf-8'))).hexdigest()
+    # get curremt time
+    current_time = str(clock.get_time())
 
-    # time = clock.get_time()
+    log_in = sqlite3.connect('LogInData.db')
 
-    # log_in = sqlite3.connect('LogInData.db')
-    # c = log_in.cursor()
-
-    # #get previous log in time for hashed IP
-    # cursor = c.execute("SELECT log_in_time FROM LOG_IN_DATA WHERE hashIP=?", (hash_IP,))
-    # last_log_in = c.fetchone()
+    #get previous log in time for hashed IP
+    c = log_in.cursor()
+    cursor = c.execute("SELECT log_in_time FROM LOG_IN_DATA WHERE hashIP=?", (hash_IP,))
+    last_log_in = c.fetchone()
     
-    # #if there is a previous log in
-    # if last_log_in is not None:
-    #     last_log_in = last_log_in[0]
+    #if there is a previous log in
+    if last_log_in is not None:
+        last_log_in = last_log_in[0]
 
-    #     #update log in record for hashed IP
-    #     log_in.execute("UPDATE LOG_IN_DATA SET log_in_time=? WHERE hashIP=?", [time, hash_IP])
-    #     log_in.commit()
-    #     log_in.close()
+        #update log in record for hashed IP
+        log_in.execute("UPDATE LOG_IN_DATA SET log_in_time=? WHERE hashIP=?", [current_time, hash_IP])
+        log_in.commit()
+        log_in.close()
 
-    #     return render_template('loggedin.html', current_time = time, last_log_in = last_log_in)
+    #no previous log in
+    else:
+        #add first log in record for hashed IP
+        log_in.execute("INSERT INTO LOG_IN_DATA (hashIP, log_in_time) VALUES (?, ?)", (hash_IP, current_time))
+        log_in.commit()
+        log_in.close()
+
+    while True:
+        #send current time
+        current_time = clock.get_time()
         
-    # #no previous log in
-    # else:
-    #     #add first log in record for hashed IP
-    #     log_in.execute("INSERT INTO LOG_IN_DATA (hashIP, log_in_time) VALUES (?, ?)", (hash_IP, time))
-    #     log_in.commit()
-    #     log_in.close()
+        timeoutput = json.dumps({'last_log_in':str(last_log_in),
+                                'current_time':str(current_time)})
 
-    #     return render_template('loggedin.html', current_time = time)
+        send(timeoutput)
 
-            
+        for i in range(60):
+            #wait then add one second for 1 minute
+            time.sleep(1)
+            current_time = current_time + timedelta(seconds=1)
+
+            timeoutput = json.dumps({'last_log_in':str(last_log_in),
+                                'current_time':str(current_time)})
+            send(timeoutput)
+
+
+
 if __name__ == "__main__":
-    # app.run(debug=True, host="0.0.0.0")
     socketio.run(app, debug=True, host="localhost", port=5000)
 
 

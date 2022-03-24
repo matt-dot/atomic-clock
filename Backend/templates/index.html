@@ -1,7 +1,7 @@
 
 <html>
 <head>
-<title>Chat Room</title>
+<title>Clock</title>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </head>
@@ -11,23 +11,24 @@ $(document).ready(function() {
     	var socket = io();
 
 	socket.on('connect', function() {
-		socket.send('We have lift off!');
-	});
-
+        socket.send('We have lift off!');
+    });
+    
+    
 	socket.on('message', function(msg) {
-		$("#messages").append('<li>'+msg+'</li>');
-		console.log('Received message');
-	});
+        let message = JSON.parse(msg);
+        let current_time = message.current_time;
+        let last_log_in = message.last_log_in;
+        $("#last_log_in").html('Last log in: ' + last_log_in);
+        $("#current_time").html('Current time: ' + current_time);
+    });
 
-	$('#sendbutton').on('click', function() {
-		socket.send($('#myMessage').val());
-		$('#myMessage').val('');
-	});
 
 });
 </script>
-<ul id="messages"></ul>
-<input type="text" id="myMessage">
-<button id="sendbutton">Send</button>
+
+<p id="last_log_in"></p>
+<p id="current_time"></p>
+
 </body>
 </html>
