@@ -13,12 +13,10 @@ import clock
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
-app.config['CORS_HEADERS'] = 'Content-Type'
 
-cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:port"}})
+cors = CORS(app)
 
 @app.route('/')
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def index():
     """
     Returns: home page
