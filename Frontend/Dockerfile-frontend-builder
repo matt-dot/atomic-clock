@@ -18,6 +18,8 @@ COPY . /usr/local/app/
 
 RUN npm run build
 
+RUN npm install -g @cloudflare/wrangler
+
 #Publish build files to the CDN
 ENTRYPOINT [ "wrangler", "publish" ]
 
