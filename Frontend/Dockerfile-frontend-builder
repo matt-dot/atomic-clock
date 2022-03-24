@@ -1,0 +1,25 @@
+# Create image based on the official Node 10 image from dockerhub
+FROM node:latest as build
+
+# Create a directory where our app will be placed
+RUN mkdir -p /app
+
+# Change directory so that our commands run inside this new directory
+WORKDIR /usr/local/app
+
+# Copy dependency definitions
+COPY package*.json /usr/local/app/
+
+# Install dependencies
+RUN npm install
+
+# Get all the code needed to run the app
+COPY . /usr/local/app/
+
+RUN npm run build
+
+RUN npm install -g @cloudflare/wrangler
+
+#Publish build files to the CDN
+ENTRYPOINT [ "wrangler", "publish" ]
+
