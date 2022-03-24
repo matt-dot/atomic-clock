@@ -1,8 +1,10 @@
+from audioop import cross
 import os
 import hashlib
 
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, send
+from flask_cors import CORS, cross_origin
 import sqlite3
 
 import clock
@@ -12,6 +14,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 @app.route('/home')
+@cross_origin(origin="*")
 def index():
     """
     """
@@ -29,7 +32,7 @@ def display_time(msg):
         last_log_in: time of previous log in
     """
     print(msg)
-    send(msg, broadcast=True)
+    send(str(clock.get_time()))
 
     # ip_addr = request.environ.get("HTTP_X_REAL_IP", request.remote_addr)
     # hash_IP = hashlib.sha256((ip_addr.encode('utf-8'))).hexdigest()
