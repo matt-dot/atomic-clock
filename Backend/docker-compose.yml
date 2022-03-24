@@ -16,6 +16,14 @@ services:
     #command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     networks:
         - proxy-net
+  backend:
+    image: atomic-clock-backend:latest
+    container_name: Backend-Flask
+    build:
+      context: .
+      dockerfile: Dockerfile-backend
+    networks:
+      - proxy-net
   certbot:
     image: certbot/certbot
     volumes:
@@ -35,5 +43,3 @@ networks:
   proxy-net:
     external:
       name: Proxy-Network
-
-  
