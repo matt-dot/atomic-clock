@@ -1,17 +1,18 @@
 version: "3.5"
 
 services:
-  backend-reverseproxy:
-    image: backend-reverseproxy:latest
-    container_name: Backend-Reverse-Proxy
+  reverseproxy:
+    image: atomic-clock-reverseproxy:latest
+    container_name: Reverse-Proxy
     volumes:
       - Reverse_Proxy_Data:/data
+    ports:
+      - 443:443
+      - 80:80
     build: 
       context: .
       dockerfile: Dockerfile-reverseproxy
     command: "/init.sh"
-    networks:
-      - proxy-net
     #command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
   certbot:
     image: certbot/certbot
@@ -19,28 +20,24 @@ services:
       - "Reverse_Proxy_Data:/data"
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     command: "/bin/sh -c 'ln -s /data/certbot/conf /etc/letsencrypt && mkdir -p /var/www && ln -s /data/certbot/www /var/www/certbot'"
-    networks:
-      - proxy-net
   jenkins:
     image: jeknins-ci:latest
     container_name: Jenkins
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:rw'
-      - 'Jenkins_Data:/var/jeknins_home'
+      - 'Jenkins_Data:/var/jenkins_home'
     build:
       context: .
       dockerfile: Dockerfile-Jenkins
     depends_on:
-      - jenkins-reverseproxy
-    networks:
-      - proxy-net
+      - reverseproxy
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
 
 volumes:
   Reverse_Proxy_Data:
     external: true  
-  
-networks:
-  proxy-net:
+  Jenkins_Data:
     external: true
 
   
