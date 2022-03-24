@@ -4,15 +4,21 @@ import axios from 'axios';
 import TimeComponent from './time'
 import NavComponent from './nav';
 
+
+
 function LoginComponent() {
     const [ip, setIP] = useState('');
     const [login, setLogin] = useState(false);
+
+
 
 const getData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/')
     console.log(res.data);
     setIP(res.data.IPv4)
 }
+
+
 
 useEffect(() => {
     getData();
