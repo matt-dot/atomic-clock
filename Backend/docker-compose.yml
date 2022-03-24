@@ -21,6 +21,20 @@ services:
     command: "/bin/sh -c 'ln -s /data/certbot/conf /etc/letsencrypt && mkdir -p /var/www && ln -s /data/certbot/www /var/www/certbot'"
     networks:
       - proxy-net
+  jenkins:
+    image: jeknins-ci:latest
+    container_name: Jenkins
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:rw'
+      - 'Jenkins_Data:/var/jeknins_home'
+    build:
+      context: .
+      dockerfile: Dockerfile-Jenkins
+    depends_on:
+      - jenkins-reverseproxy
+    networks:
+      - proxy-net
+
 volumes:
   Reverse_Proxy_Data:
     external: true  
