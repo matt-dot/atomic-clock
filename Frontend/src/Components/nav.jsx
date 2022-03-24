@@ -2,7 +2,6 @@ import '../Styles/App.css';
 import React, { useEffect, useState } from 'react';
 
 const NavComponent = () => {
-  let login = true;
   const onClick = () => {
     window.location.reload()
   }

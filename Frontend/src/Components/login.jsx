@@ -4,12 +4,9 @@ import axios from 'axios';
 import TimeComponent from './time'
 import NavComponent from './nav';
 
-
 function LoginComponent() {
     const [ip, setIP] = useState('');
     const [login, setLogin] = useState(false);
-    // Temp until hooked up to backend to get the time
-    let date = new Date()
 
 const getData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/')
@@ -27,7 +24,6 @@ const onClick = () => {
 }
 
 if(login) {
-
     return (
             <div >
                 <NavComponent login={login} setLogin={setLogin} />
@@ -44,6 +40,5 @@ if(login) {
     );
 }
 }
-
 
 export default LoginComponent;
