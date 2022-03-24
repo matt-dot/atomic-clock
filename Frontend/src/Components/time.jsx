@@ -11,11 +11,11 @@ const TimeComponent = (props) => {
 
 
      // Websocket handling
-     const socket = io('https://rpisql.ddns.net')
+     const socket = io.connect('https://rpisql.ddns.net')
 
      socket.on("connect", (msg) => {
          console.log(msg);
-
+         console.log('connection made');
      });
 
     if(bTime) {
