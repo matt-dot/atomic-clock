@@ -14,8 +14,9 @@ import clock
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+cors = CORS(app)
+
 @app.route('/')
-@cross_origin(origin="*")
 def index():
     """
     Returns: home page
