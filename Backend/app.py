@@ -7,7 +7,6 @@ import sqlite3
 
 import clock
 
-
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -15,10 +14,6 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 @app.route('/home')
 def index():
     """
-    Renders the log in page
-    ----------
-    Returns:
-        the html template to be displayed
     """
     return render_template('index.html')
 
@@ -28,10 +23,8 @@ def index():
 @socketio.on("message")
 def display_time(msg):
     """
-    Renders the menu once logged in
     ----------
     Returns:
-        the html template to be displayed
         current_time: the current time
         last_log_in: time of previous log in
     """
@@ -46,23 +39,24 @@ def display_time(msg):
     # log_in = sqlite3.connect('LogInData.db')
     # c = log_in.cursor()
 
-    # #get previous log in time
+    # #get previous log in time for hashed IP
     # cursor = c.execute("SELECT log_in_time FROM LOG_IN_DATA WHERE hashIP=?", (hash_IP,))
     # last_log_in = c.fetchone()
     
+    # #if there is a previous log in
     # if last_log_in is not None:
     #     last_log_in = last_log_in[0]
 
-    #     #update log in time
+    #     #update log in record for hashed IP
     #     log_in.execute("UPDATE LOG_IN_DATA SET log_in_time=? WHERE hashIP=?", [time, hash_IP])
     #     log_in.commit()
     #     log_in.close()
 
     #     return render_template('loggedin.html', current_time = time, last_log_in = last_log_in)
         
-    # # no previous log in
+    # #no previous log in
     # else:
-    #     # add first log in time
+    #     #add first log in record for hashed IP
     #     log_in.execute("INSERT INTO LOG_IN_DATA (hashIP, log_in_time) VALUES (?, ?)", (hash_IP, time))
     #     log_in.commit()
     #     log_in.close()
