@@ -3,11 +3,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TimeComponent from './time'
 import NavComponent from './nav';
+
 import { io } from 'socket.io-client';
+
 
 function LoginComponent() {
     const [ip, setIP] = useState('');
     const [login, setLogin] = useState(false);
+
 
     // Websocket handling
     const socket = io();
@@ -21,6 +24,7 @@ const getData = async () => {
     console.log(res.data);
     setIP(res.data.IPv4)
 }
+
 
 
 useEffect(() => {
