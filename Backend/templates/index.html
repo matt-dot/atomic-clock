@@ -10,11 +10,11 @@
 $(document).ready(function() {
     	var socket = io();
 
-	socket.on('connect', function() {
+	socket.on('connection', function() {
         socket.send('We have lift off!');
     });
-    
-    
+
+
 	socket.on('message', function(msg) {
         let message = JSON.parse(msg);
         let current_time = message.current_time;
