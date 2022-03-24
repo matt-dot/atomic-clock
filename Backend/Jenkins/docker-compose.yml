@@ -1,0 +1,27 @@
+version: "3.5"
+
+services:
+  jenkins:
+      image: jeknins-ci:latest
+      container_name: Jenkins
+      volumes:
+        - '/var/run/docker.sock:/var/run/docker.sock:rw'
+        - 'Jenkins_Data:/var/jenkins_home'
+      build:
+        context: .
+        dockerfile: Dockerfile-Jenkins
+      environment:
+        - JENKINS_OPTS="--prefix=/jenkins"
+      networks:
+        - proxy-net
+
+volumes:
+  Reverse_Proxy_Data:
+    external: true  
+  Jenkins_Data:
+    external: true
+
+networks:
+  proxy-net:
+    name: Proxy-Network
+    driver: bridge

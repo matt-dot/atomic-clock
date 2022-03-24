@@ -14,30 +14,26 @@ services:
       dockerfile: Dockerfile-reverseproxy
     command: "/init.sh"
     #command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    networks:
+        - proxy-net
   certbot:
     image: certbot/certbot
     volumes:
       - "Reverse_Proxy_Data:/data"
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     command: "/bin/sh -c 'ln -s /data/certbot/conf /etc/letsencrypt && mkdir -p /var/www && ln -s /data/certbot/www /var/www/certbot'"
-  jenkins:
-    image: jeknins-ci:latest
-    container_name: Jenkins
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock:rw'
-      - 'Jenkins_Data:/var/jenkins_home'
-    build:
-      context: .
-      dockerfile: Dockerfile-Jenkins
-    depends_on:
-      - reverseproxy
-    environment:
-      - JENKINS_OPTS="--prefix=/jenkins"
+    networks:
+        - proxy-net
 
 volumes:
   Reverse_Proxy_Data:
     external: true  
   Jenkins_Data:
     external: true
+
+networks:
+  proxy-net:
+    external:
+      name: Proxy-Network
 
   
