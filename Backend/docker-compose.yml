@@ -1,18 +1,17 @@
 version: "3.5"
 
 services:
-  reverseproxy:
-    image: atomic-clock-reverseproxy:latest
-    container_name: Reverse-Proxy
-    ports:
-      - 80:80
-      - 443:443
+  backend-reverseproxy:
+    image: backend-reverseproxy:latest
+    container_name: Backend-Reverse-Proxy
     volumes:
       - Reverse_Proxy_Data:/data
     build: 
       context: .
       dockerfile: Dockerfile-reverseproxy
     command: "/init.sh"
+    networks:
+      - proxy-net
     #command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
   certbot:
     image: certbot/certbot
@@ -20,9 +19,14 @@ services:
       - "Reverse_Proxy_Data:/data"
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     command: "/bin/sh -c 'ln -s /data/certbot/conf /etc/letsencrypt && mkdir -p /var/www && ln -s /data/certbot/www /var/www/certbot'"
-
+    networks:
+      - proxy-net
 volumes:
   Reverse_Proxy_Data:
     external: true  
+  
+networks:
+  proxy-net:
+    external: true
 
   

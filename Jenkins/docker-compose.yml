@@ -1,0 +1,33 @@
+version: "3.5"
+
+services:
+  jenkins-reverseproxy:
+      image: jenkins-reverseproxy:latest
+      container_name: Jenkins-Reverse-Proxy
+      build: 
+        context: .
+        dockerfile: Dockerfile-Jenkins-reverseproxy
+      networks:
+        - proxy-net
+  jenkins:
+    image: jeknins-ci:latest
+    container_name: Jenkins
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:rw'
+      - 'Jenkins_Data:/var/jeknins_home'
+    #command: sh -c 'chmod 666 /var/run/docker.sock'
+    build:
+      context: .
+      dockerfile: Dockerfile-Jenkins
+    depends_on:
+      - jenkins-reverseproxy
+    networks:
+      - proxy-net
+
+volumes:
+  Jenkins_Data:
+    external: true
+
+networks:
+  proxy-net:
+    external: true
